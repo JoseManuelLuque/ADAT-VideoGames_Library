@@ -22,6 +22,6 @@ data class Category (
 
     @ManyToOne
     @JoinColumn(name = "videogame_id", nullable = false)
-    var videogame: Videogame? = null
+    var videogames: Videogame? = null
 
 )

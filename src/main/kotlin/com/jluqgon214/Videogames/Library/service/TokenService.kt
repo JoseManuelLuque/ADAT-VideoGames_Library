@@ -30,8 +30,6 @@ class TokenService {
             .claim("roles", roles)
             .build()
 
-
-
         return jwtEncoder.encode(JwtEncoderParameters.from(payload)).tokenValue
     }
 
