@@ -2,15 +2,18 @@ package com.jluqgon214.Videogames.Library.controller
 
 import com.jluqgon214.Videogames.Library.model.Videogame
 import com.jluqgon214.Videogames.Library.service.VideogameService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/videogames")
-class VideogameController(
-    private val videogameService: VideogameService
-) {
+class VideogameController(){
+
+    @Autowired
+    private lateinit var videogameService: VideogameService
+
 
     @GetMapping
     fun getAll(): ResponseEntity<List<Videogame>> {

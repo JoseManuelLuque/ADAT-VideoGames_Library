@@ -2,13 +2,15 @@ package com.jluqgon214.Videogames.Library.service
 
 import com.jluqgon214.Videogames.Library.model.Videogame
 import com.jluqgon214.Videogames.Library.repository.VideogameRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class VideogameService(
-    private val videogameRepository: VideogameRepository
-) {
+class VideogameService() {
+    @Autowired
+    private lateinit var videogameRepository: VideogameRepository
+
 
     fun getAll(): List<Videogame> {
         return videogameRepository.findAll()
@@ -33,7 +35,8 @@ class VideogameService(
             developer = videogame.developer,
             platform = videogame.platform,
             release_date = videogame.release_date,
-            genre = videogame.genre
+            genre = videogame.genre,
+            cover = null
         )
         return videogameRepository.save(updated)
     }

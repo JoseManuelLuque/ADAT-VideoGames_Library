@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface VideogameRepository : JpaRepository<Videogame, Long> {
-    fun findByTitulo(titulo: String): List<Videogame> // Ejemplo: buscar por título
+    fun findByTitle(tittle: String): List<Videogame> // Ejemplo: buscar por título
 }
