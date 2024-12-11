@@ -39,10 +39,10 @@ class SecurityConfig {
             }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/usuarios/login").permitAll()
-                    .requestMatchers("/rutas_protegidas/**").authenticated()
-                    .requestMatchers("/secretos/**").hasRole("ADMIN")
-                    .requestMatchers("/rutas_publicas/**").permitAll()
+                    .requestMatchers("/users/login").permitAll()
+                    //.requestMatchers("/rutas_protegidas/**").authenticated()
+                    //.requestMatchers("/secretos/**").hasRole("ADMIN")
+                    //.requestMatchers("/rutas_publicas/**").permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { session ->

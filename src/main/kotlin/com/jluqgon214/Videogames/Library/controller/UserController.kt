@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/users")
 class UserController {
 
     @Autowired
@@ -44,7 +44,6 @@ class UserController {
     }
 
     @PostMapping("/login")
-
     fun login(@RequestBody usuario: User): ResponseEntity<Any>? {
         val authentication: Authentication
 

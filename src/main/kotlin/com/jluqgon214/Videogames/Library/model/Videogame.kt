@@ -19,7 +19,7 @@ data class Videogame(
     var title: String? = null,
 
     @Column(nullable = false)
-    var plataform: String? = null,
+    var platform: String? = null,
 
     @Column(nullable = false)
     var genre: String? = null,
