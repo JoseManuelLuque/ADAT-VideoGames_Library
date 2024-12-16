@@ -1,5 +1,6 @@
 package com.jluqgon214.Videogames.Library.security
 
+import com.jluqgon214.Videogames.Library.service.UserService
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -9,8 +10,10 @@ import com.nimbusds.jose.proc.SecurityContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -28,7 +31,12 @@ import org.springframework.security.web.SecurityFilterChain
 class SecurityConfig {
 
     @Autowired
+    @Lazy
+    private lateinit var userService: UserService
+
+    @Autowired
     private lateinit var RsaKeys: RSAKeysProperties
+
 
     @Bean
     fun SecurityFilterChanin(http: HttpSecurity): SecurityFilterChain {
@@ -38,7 +46,7 @@ class SecurityConfig {
             }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/users/login").permitAll()
+                    //.requestMatchers("/users/login").permitAll()
                     //.requestMatchers("/rutas_protegidas/**").authenticated()
                     //.requestMatchers("/secretos/**").hasRole("ADMIN")
                     //.requestMatchers("/rutas_publicas/**").permitAll()
@@ -74,5 +82,10 @@ class SecurityConfig {
     @Bean
     fun jwtDecoder(): JwtDecoder {
         return NimbusJwtDecoder.withPublicKey(RsaKeys.publicKey).build()
+    }
+
+    @Autowired
+    fun configureAuthenticationManager(auth: AuthenticationManagerBuilder) {
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder())
     }
 }
