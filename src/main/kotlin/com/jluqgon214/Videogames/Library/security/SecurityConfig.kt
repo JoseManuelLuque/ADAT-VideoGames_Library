@@ -46,7 +46,7 @@ class SecurityConfig {
                 auth
                     .requestMatchers("/users/login", "/users/register").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
             }
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .httpBasic(Customizer.withDefaults())
