@@ -13,11 +13,11 @@ data class Library(
 
     // Relación muchos a uno con la tabla de usuarios
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, foreignKey = ForeignKey(name = "fk_libraries_user"))
+    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false, foreignKey = ForeignKey(name = "fk_libraries_user"))
     val user: User,
 
     // Relación muchos a uno con la tabla de videojuegos
     @ManyToOne(optional = false)
-    @JoinColumn(name = "videogame_id", referencedColumnName = "videogame_id", nullable = false, foreignKey = ForeignKey(name = "fk_libraries_videogame"))
+    @JoinColumn(name = "videogameId", referencedColumnName = "videogameId", nullable = false, foreignKey = ForeignKey(name = "fk_libraries_videogame"))
     val videogame: Videogame
 )

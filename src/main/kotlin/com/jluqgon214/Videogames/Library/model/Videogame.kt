@@ -2,13 +2,10 @@ package com.jluqgon214.Videogames.Library.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.ForeignKey
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
 import jakarta.persistence.Table
-import jakarta.persistence.ManyToOne
 import java.net.URL
 import java.util.Date
 
@@ -17,7 +14,7 @@ import java.util.Date
 @Table(name = "Videogames")
 data class Videogame(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var videogame_id: Long? = null,
+    var videogameId: Long? = null,
 
     @Column(unique = true, nullable = false)
     var title: String? = null,
