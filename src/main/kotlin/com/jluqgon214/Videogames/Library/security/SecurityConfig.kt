@@ -50,6 +50,7 @@ class SecurityConfig {
                     //.requestMatchers("/rutas_protegidas/**").authenticated()
                     //.requestMatchers("/secretos/**").hasRole("ADMIN")
                     //.requestMatchers("/rutas_publicas/**").permitAll()
+                    .requestMatchers( "/videogames/{id}").authenticated()
                     .anyRequest().permitAll()
             }
             .sessionManagement { session ->

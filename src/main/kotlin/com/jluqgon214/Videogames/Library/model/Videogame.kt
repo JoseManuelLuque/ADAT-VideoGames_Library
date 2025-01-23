@@ -2,6 +2,7 @@ package com.jluqgon214.Videogames.Library.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.ForeignKey
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -11,8 +12,9 @@ import jakarta.persistence.ManyToOne
 import java.net.URL
 import java.util.Date
 
+@Suppress("JpaObjectClassSignatureInspection")
 @Entity
-@Table(name = "VideoGDELETE FROM VideoGames WHERE category_id NOT IN (SELECT id FROM Categories);ames")
+@Table(name = "Videogames")
 data class Videogame(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var videogame_id: Long? = null,
@@ -31,10 +33,5 @@ data class Videogame(
 
     var developer: String? = null,
 
-    var cover: URL? = null,
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false) // Relación con Category
-    var category: Category? = null
-
+    var cover: URL? = null
 )
