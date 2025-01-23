@@ -7,6 +7,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.util.*
@@ -21,6 +22,9 @@ class UserService : UserDetailsService {
     @Autowired
     private lateinit var userReposiroty: UserRepository
 
+    @Autowired
+    private lateinit var jwtEncoder: JwtEncoder
+
     override fun loadUserByUsername(username: String?): UserDetails {
         val user: User = userReposiroty
             .findByUsername(username!!)
@@ -30,7 +34,7 @@ class UserService : UserDetailsService {
             .builder()
             .username(user.username)
             .password(user.password)
-            .roles(user.roles)
+            .roles(user.roles.toString())
             .build()
     }
 

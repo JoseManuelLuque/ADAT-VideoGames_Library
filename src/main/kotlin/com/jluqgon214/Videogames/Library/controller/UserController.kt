@@ -72,25 +72,16 @@ class UserController {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody usuario: User): ResponseEntity<Any>? {
+    fun login(@RequestBody usuario: User): ResponseEntity<Any> {
         return try {
-            // Llamar al servicio para autenticar
             val token = userService.login(usuario)
-
-            // Responder con el token generado
             ResponseEntity.ok(mapOf("token" to token, "mensaje" to "Inicio de sesión exitoso"))
         } catch (e: IllegalArgumentException) {
-            // Error en las credenciales proporcionadas o datos incompletos
-            ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(mapOf("mensaje" to e.message))
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("mensaje" to e.message))
         } catch (e: NoSuchElementException) {
-            // Error cuando el usuario no puede encontrarse
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(mapOf("mensaje" to e.message))
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("mensaje" to e.message))
         } catch (e: Exception) {
-            // Manejo general para otros errores
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(mapOf("mensaje" to "Ocurrió un error interno"))
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("mensaje" to "Ocurrió un error interno"))
         }
     }
 

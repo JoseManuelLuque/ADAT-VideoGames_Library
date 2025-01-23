@@ -1,3 +1,4 @@
+// SecurityConfig.kt
 package com.jluqgon214.Videogames.Library.security
 
 import com.jluqgon214.Videogames.Library.service.UserService
@@ -37,24 +38,17 @@ class SecurityConfig {
     @Autowired
     private lateinit var RsaKeys: RSAKeysProperties
 
-
     @Bean
-    fun SecurityFilterChanin(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
-            .csrf { csrf ->
-                csrf.disable() // Cross-Site Forgery
-            }
+            .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    //.requestMatchers("/users/login").permitAll()
-                    //.requestMatchers("/rutas_protegidas/**").authenticated()
-                    //.requestMatchers("/secretos/**").hasRole("ADMIN")
-                    //.requestMatchers("/rutas_publicas/**").permitAll()
-                    .anyRequest().permitAll()
+                    .requestMatchers("/users/login", "/users/register").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .anyRequest().authenticated()
             }
-            .sessionManagement { session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
+            .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .httpBasic(Customizer.withDefaults())
             .build()
     }
@@ -64,13 +58,11 @@ class SecurityConfig {
         return BCryptPasswordEncoder()
     }
 
-    // Método que inicializa un objeto de tipo AuthentucationManager
     @Bean
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
         return authenticationConfiguration.authenticationManager
     }
 
-    // Método para codificar un JWT
     @Bean
     fun jwtEncoder(): JwtEncoder {
         val jwk: JWK = RSAKey.Builder(RsaKeys.publicKey).privateKey(RsaKeys.privateKey).build()
@@ -78,7 +70,6 @@ class SecurityConfig {
         return NimbusJwtEncoder(jwks)
     }
 
-    // Método para decodificar un JWT
     @Bean
     fun jwtDecoder(): JwtDecoder {
         return NimbusJwtDecoder.withPublicKey(RsaKeys.publicKey).build()
