@@ -1,15 +1,18 @@
 package com.jluqgon214.Videogames.Library.controller
 
 import com.jluqgon214.Videogames.Library.model.User
+import com.jluqgon214.Videogames.Library.service.TokenService
 import com.jluqgon214.Videogames.Library.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtClaimsSet
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,11 +32,7 @@ class UserController {
     private lateinit var authenticationManager: AuthenticationManager
 
     @Autowired
-    private lateinit var passwordEncoder: PasswordEncoder
-
-    @Autowired
-    private lateinit var jwtEncoder: JwtEncoder
-
+    private lateinit var TokenService: TokenService
     /*
     MÉTODO PARA INSERTAR UN USUARIO
      */
@@ -81,20 +80,19 @@ class UserController {
         } catch (e: NoSuchElementException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("mensaje" to e.message))
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("mensaje" to "Ocurrió un error interno"))
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("mensaje" to "La contrasña no es correcta"))
         }
     }
 
-    // Método auxiliar para crear el JWT
-    fun generateJwtToken(claims: Map<String, Any>): String {
-        val now = Instant.now()
-        val jwtClaimsSet = JwtClaimsSet.builder()
-            .claims(claims as Consumer<Map<String?, Any?>?>?)
-            .subject(claims["username"].toString())
-            .issuedAt(now)
-            .expiresAt(now.plus(1, ChronoUnit.HOURS)) // Expiración en 1 hora
-            .build()
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun adminEndpoint(): ResponseEntity<String> {
+        return ResponseEntity.ok("Acceso permitido solo para administradores")
+    }
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).tokenValue
+    @GetMapping("/user")
+    @PreAuthorize("isAuthenticated()")
+    fun userEndpoint(): ResponseEntity<String> {
+        return ResponseEntity.ok("Acceso permitido para usuarios autenticados")
     }
 }

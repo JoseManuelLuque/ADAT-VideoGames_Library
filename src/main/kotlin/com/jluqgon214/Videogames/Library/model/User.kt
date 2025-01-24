@@ -18,9 +18,6 @@ data class User(
     @Column(nullable = false)
     var register_date: Date? = null,
 
-    @ElementCollection(targetClass = Role::class, fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = [JoinColumn(name = "userId")])
     @Column(name = "role", nullable = false)
-    val roles: Set<Role>? = setOf(Role.USER)
+    val roles: String? = "USER"
 )

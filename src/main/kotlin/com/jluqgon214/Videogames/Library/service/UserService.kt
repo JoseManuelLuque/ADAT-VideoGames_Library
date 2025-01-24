@@ -4,6 +4,8 @@ import com.jluqgon214.Videogames.Library.model.User
 import com.jluqgon214.Videogames.Library.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -23,7 +25,8 @@ class UserService : UserDetailsService {
     private lateinit var userReposiroty: UserRepository
 
     @Autowired
-    private lateinit var jwtEncoder: JwtEncoder
+    private lateinit var TokenService: TokenService
+
 
     override fun loadUserByUsername(username: String?): UserDetails {
         val user: User = userReposiroty
@@ -44,7 +47,6 @@ class UserService : UserDetailsService {
             throw IllegalArgumentException("El nombre de usuario y la contraseña son obligatorios")
         }
 
-
         // COMPROBAR CREDENCIALES
         // Buscar el usuario en la base de datos
         val userBD: User = userReposiroty.findByUsername(userLogin.username!!)
@@ -52,25 +54,15 @@ class UserService : UserDetailsService {
 
         // 2 Compruebo nombre y pass
         if (passwordEncoder.matches(userLogin.password, userBD.password)) {
-            // 3 GENERAR EL TOKEN
-            var token: String = ""
-            token = UUID.randomUUID().toString()
+            // Crear la utentificacion
+            val authorities = listOf(SimpleGrantedAuthority(userBD.roles))
+            val authentication = UsernamePasswordAuthenticationToken(userBD.username, null, authorities)
 
-            /*// 4 CREAR UNA SESSION
-            val s: Session = Session(
-                null,
-                token,
-                userBD,
-                LocalDateTime.now().plusMinutes(3)
-            )
-
-            // 5 INSERTAMOS EN BDD
-            sessionRepository.save(s)*/
-
-            return token
+            // Generar el token
+            return TokenService.generateToken(authentication)
         } else {
-            // SI LA CONTRASEÑA NO COINCIDE, LANZAMOS EXCEPCIÓN
-            throw NotFoundException(/*"Las credenciales son incorrectas"*/)
+            // Si la contraseña no coincide, lanzar excepción
+            throw NoSuchElementException("Las credenciales son incorrectas")
         }
     }
 
@@ -83,6 +75,11 @@ class UserService : UserDetailsService {
         // Comprobamos que el usuario no existe en la base de datos
         userReposiroty.findByUsername(usuario.username!!).ifPresent {
             throw RuntimeException("El usuario ya existe")
+        }
+
+        val validRoles = setOf("USER", "ADMIN")
+        if (!validRoles.contains(usuario.roles)) {
+            throw IllegalArgumentException("Rol no válido. Solo se permiten los roles 'USER' o 'ADMIN'")
         }
 
         // Creamos la instancia de Usuario
