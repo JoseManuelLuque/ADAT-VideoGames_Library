@@ -14,11 +14,11 @@ La justificación de este proyecto radica en la creciente popularidad de los vid
 
 ## Tablas
 
-Este proyecto usa 3 tablas principales
+Este proyecto usa 3 tablas principales y 1 tabla de unión
 
 ### Descripción
 
-1. #### Users
+#### Users
 
 La tabla Users almacena información sobre los usuarios de la aplicación. Cada usuario tiene un identificador único, un nombre de usuario y una contraseña.
 
@@ -29,4 +29,103 @@ La tabla Users almacena información sobre los usuarios de la aplicación. Cada 
 **username**: El nombre de usuario del usuario, que es obligatorio y debe ser único.&#x20;
 
 **password**: La contraseña del usuario, que es obligatoria.
+
+
+
+#### Videogames
+
+La tabla Videogames almacena información sobre los videojuegos. Cada videojuego tiene un identificador único, un título y un género.
+
+\
+**videogameId**: Un identificador único para cada videojuego (Clave Primaria).&#x20;
+
+**title**: El título del videojuego, que es obligatorio.&#x20;
+
+**genre**: El género del videojuego, que es obligatorio.
+
+
+
+#### Libraries
+
+La tabla Libraries almacena información sobre las bibliotecas creadas por los usuarios. Cada biblioteca tiene un identificador único, un tipo y una referencia al usuario que la creó.
+
+\
+**library\_id**: Un identificador único para cada biblioteca (Clave Primaria).&#x20;
+
+**type**: El tipo de la biblioteca (por ejemplo, "por jugar", "completados"), que es obligatorio.&#x20;
+
+**userId**: Una referencia al usuario que creó la biblioteca (Clave Foránea).
+
+
+
+#### Library\_Videogame
+
+La tabla Library\_Videogame es una tabla de unión que establece una relación de muchos a muchos entre bibliotecas y videojuegos. Cada entrada en esta tabla vincula una biblioteca con un videojuego.&#x20;
+
+**library\_id**: Una referencia a la biblioteca (Clave Foránea).&#x20;
+
+**videogameId**: Una referencia al videojuego (Clave Foránea).&#x20;
+
+**PRIMARY KEY (library\_id, videogameId)**: Clave primaria compuesta para asegurar que cada combinación de biblioteca y videojuego sea única.
+
+
+
+### Diagrama Entidad/Relación
+
+<figure><img src=".gitbook/assets/Untitled.png" alt=""><figcaption></figcaption></figure>
+
+
+
+## Endpoints
+
+#### Endpoints de Usuario
+
+* **POST /users/register**: Registra un nuevo usuario en la plataforma.
+  * **Respuesta**: Código 201 (Created) o 400 (Bad Request).
+* **POST /users/login**: Inicia sesión con un usuario existente.
+  * **Respuesta**: Código 200 (OK) o 400 (Bad Request).
+* **GET /users**: Obtiene una lista de todos los usuarios.
+  * **Respuesta**: Código 200 (OK) o 403 (Forbidden).
+
+#### Endpoints de Bibliotecas
+
+* **GET /libraries**: Obtiene una lista de todas las bibliotecas.
+  * **Respuesta**: Código 200 (OK) o 403 (Forbidden).
+* **GET /libraries/user/{userId}**: Obtiene todas las bibliotecas de un usuario específico por ID.
+  * **Respuesta**: Código 200 (OK) o 404 (Not Found).
+* **GET /libraries/user/{userId}/type/{type}**: Obtiene todas las bibliotecas de un usuario específico por ID y tipo de biblioteca.
+  * **Respuesta**: Código 200 (OK) o 404 (Not Found).
+* **POST /libraries**: Crea una nueva biblioteca.
+  * **Respuesta**: Código 201 (Created) o 400 (Bad Request).
+* **DELETE /libraries/{id}**: Elimina una biblioteca por ID.
+  * **Respuesta**: Código 204 (No Content) o 404 (Not Found).
+* **POST /libraries/{libraryId}/add**: Añade videojuegos a una biblioteca.
+  * **Respuesta**: Código 200 (OK) o 400 (Bad Request).
+* **DELETE /libraries/{libraryId}/delete**: Elimina videojuegos de una biblioteca.
+  * **Respuesta**: Código 200 (OK) o 400 (Bad Request).
+
+#### Endpoints de Videojuegos
+
+* **GET /videogames**: Obtiene una lista de todos los videojuegos.
+  * **Respuesta**: Código 200 (OK).
+* **GET /videogames/{videogameId}**: Obtiene los detalles de un videojuego específico por ID.
+  * **Respuesta**: Código 200 (OK) o 404 (Not Found).
+* **POST /videogames**: Crea un nuevo videojuego.
+  * **Respuesta**: Código 201 (Created), 400 (Bad Request) o 403 (Forbidden).
+* **PUT /videogames/{videogameId}**: Actualiza un videojuego específico por ID.
+  * **Respuesta**: Código 200 (OK), 404 (Not Found) o 403 (Forbidden).
+* **DELETE /videogames/{videogameId}**: Elimina un videojuego por ID.
+  * **Respuesta**: Código 204 (No Content), 404 (Not Found) o 403 (Forbidden).
+
+#### Excepciones y códigos de estado
+
+* **400 (Bad Request)**: Datos inválidos (Ej: datos faltantes o incorrectos).
+* **404 (Not Found)**: Entidad no encontrada (Ej: usuario, biblioteca o videojuego inexistente).
+* **201 (Created)**: Creación exitosa de una entidad.
+* **200 (OK)**: Operación exitosa.
+* **204 (No Content)**: Eliminación exitosa de una entidad.
+* **401 (Unauthorized)**: Usuario sin autentificar (Todos los endpoints menos login y register)
+* **403 (Forbidden)**: Usuario si rol necesario para acceder
+
+***
 
