@@ -16,12 +16,6 @@ class UserController {
     @Autowired
     private lateinit var userService: UserService
 
-    @Autowired
-    private lateinit var authenticationManager: AuthenticationManager
-
-    @Autowired
-    private lateinit var TokenService: TokenService
-
     /*
     MÉTODO PARA INSERTAR UN USUARIO
      */
