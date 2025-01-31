@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
 import java.sql.Timestamp
 import java.util.*
 
@@ -96,6 +97,18 @@ class UserService : UserDetailsService {
         // Devolvemos el Usuario insertado en la BDD
         return newUser
 
+    }
+
+    fun getIdUser(
+        username: String
+    ): Long {
+        val user: User = userReposiroty.findByUsername(username)
+            .orElseThrow { NotFoundException() }
+        return user.userId!!
+    }
+
+    fun getAllUsers(): List<User> {
+        return userReposiroty.findAll()
     }
 
 }

@@ -18,12 +18,16 @@ class VideogameService() {
 
     fun getById(id: Long): Videogame {
         return videogameRepository.findById(id).orElseThrow {
-            IllegalArgumentException("No videogame found with ID $id") // Lanzar excepción si no se encuentra
+            IllegalArgumentException("No se encuentra ningun juego con la id: $id") // Lanzar excepción si no se encuentra
         }
     }
 
     @Transactional
     fun create(videogame: Videogame): Videogame {
+        if (videogameRepository.existsByTitle(videogame.title!!)) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("mensaje" to "La contrasña no es correcta"))
+            // Lanzar excepción si ya existe un juego con el mismo título
+        }
         return videogameRepository.save(videogame)
     }
 
@@ -35,8 +39,7 @@ class VideogameService() {
             developer = videogame.developer,
             platform = videogame.platform,
             release_date = videogame.release_date,
-            genre = videogame.genre,
-            cover = null
+            genre = videogame.genre
         )
         return videogameRepository.save(updated)
     }

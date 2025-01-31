@@ -28,7 +28,5 @@ data class Videogame(
     @Column(nullable = false)
     var release_date: Date? = null,
 
-    var developer: String? = null,
-
-    var cover: URL? = null
+    var developer: String? = null
 )

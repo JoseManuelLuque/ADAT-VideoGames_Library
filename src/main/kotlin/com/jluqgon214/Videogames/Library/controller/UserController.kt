@@ -3,6 +3,7 @@ package com.jluqgon214.Videogames.Library.controller
 import com.jluqgon214.Videogames.Library.model.User
 import com.jluqgon214.Videogames.Library.service.TokenService
 import com.jluqgon214.Videogames.Library.service.UserService
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -59,10 +60,6 @@ class UserController {
             // Retornar una respuesta exitosa con el usuario registrado
             return ResponseEntity(savedUser, HttpStatus.CREATED)
 
-        } catch (e: RuntimeException) {
-            // Manejo de errores, como si el usuario ya existe
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(mapOf("mensaje" to e.message))
         } catch (e: Exception) {
             // Manejo de cualquier otro error no esperado
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -75,24 +72,22 @@ class UserController {
         return try {
             val token = userService.login(usuario)
             ResponseEntity.ok(mapOf("token" to token, "mensaje" to "Inicio de sesión exitoso"))
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("mensaje" to e.message))
-        } catch (e: NoSuchElementException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("mensaje" to e.message))
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("mensaje" to "La contrasña no es correcta"))
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("mensaje" to "La contrasña no es correcta"))
         }
     }
 
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    fun adminEndpoint(): ResponseEntity<String> {
-        return ResponseEntity.ok("Acceso permitido solo para administradores")
+    @GetMapping
+    fun getAllUsers(): ResponseEntity<List<User>> {
+        val users = userService.getAllUsers()
+        return ResponseEntity.ok(users)
     }
 
-    @GetMapping("/user")
-    @PreAuthorize("isAuthenticated()")
-    fun userEndpoint(): ResponseEntity<String> {
-        return ResponseEntity.ok("Acceso permitido para usuarios autenticados")
+    @GetMapping("/myID")
+    fun getMyID(
+        @RequestBody username: String
+    ): ResponseEntity<Any> {
+        val id = userService.getIdUser(username)
+        return ResponseEntity.ok(mapOf("id" to id.toString()))
     }
 }

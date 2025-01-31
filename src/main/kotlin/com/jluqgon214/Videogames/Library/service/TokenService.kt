@@ -18,9 +18,10 @@ class TokenService {
     private lateinit var jwtEncoder: JwtEncoder
 
     fun generateToken(authentication: Authentication): String {
-        val roles: String = authentication.authorities
-            .map { it.authority }
-            .joinToString(" ")
+
+        println(authentication)
+        val roles: String = authentication.authorities.joinToString(" ") { it.authority } // Contiene los roles del usuario
+
 
         val payload: JwtClaimsSet = JwtClaimsSet.builder()
             .issuer("self")

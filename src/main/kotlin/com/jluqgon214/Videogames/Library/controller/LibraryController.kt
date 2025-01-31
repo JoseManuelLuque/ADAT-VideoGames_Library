@@ -29,6 +29,7 @@ class LibraryController {
         return ResponseEntity(libraryService.create(library), HttpStatus.CREATED)
     }
 
+    // Borrar libreria por su id
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         libraryService.delete(id)

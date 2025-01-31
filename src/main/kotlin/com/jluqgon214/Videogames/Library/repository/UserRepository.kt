@@ -10,5 +10,4 @@ interface UserRepository : JpaRepository<User, Long> {
 
     // Implementar una derived query para obtener a un usuario por su nombre
     fun findByUsername(username: String): Optional<User>
-
 }

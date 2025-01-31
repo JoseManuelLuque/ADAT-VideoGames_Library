@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -31,9 +32,6 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableWebSecurity
 class SecurityConfig {
 
-    @Autowired
-    @Lazy
-    private lateinit var userService: UserService
 
     @Autowired
     private lateinit var RsaKeys: RSAKeysProperties
@@ -44,10 +42,22 @@ class SecurityConfig {
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
                 auth
+                    // Para logearte o registrarte no necesitas estar autentificado, ya que si no jamas podrias logearte o registrarte
                     .requestMatchers("/users/login", "/users/register").permitAll()
-                    .requestMatchers("/users/admin").hasRole("ADMIN")
-                    .anyRequest().permitAll()
+
+                    // Usuarios
+                    .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
+
+                    // Para mirar los videojuegos debes solo estar logeado da igual tu rol
+                    .requestMatchers(HttpMethod.GET, "/videogames", "/videogames/*").authenticated()
+                    // Pero para crear, actualizar o borrar videojuegos debes ser ADMIN
+                    .requestMatchers(HttpMethod.POST, "/videogames").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/videogames/*").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/videogames/*").hasAuthority("ADMIN")
+                    // Para el resto de consultas debes estar autentificado(ADMIN o USER)
+                    .anyRequest().authenticated()
             }
+            .oauth2ResourceServer { oauth2 -> oauth2.jwt(Customizer.withDefaults()) }
             .sessionManagement { session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .httpBasic(Customizer.withDefaults())
             .build()
@@ -75,8 +85,4 @@ class SecurityConfig {
         return NimbusJwtDecoder.withPublicKey(RsaKeys.publicKey).build()
     }
 
-    @Autowired
-    fun configureAuthenticationManager(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder())
-    }
 }
