@@ -99,14 +99,6 @@ class UserService : UserDetailsService {
 
     }
 
-    fun getIdUser(
-        username: String
-    ): Long {
-        val user: User = userReposiroty.findByUsername(username)
-            .orElseThrow { NotFoundException() }
-        return user.userId!!
-    }
-
     fun getAllUsers(): List<User> {
         return userReposiroty.findAll()
     }

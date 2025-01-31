@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface LibraryRepository : JpaRepository<Library, Long> {
     fun findByUserUserIdAndType(userId: Long, type: String): List<Library>
+    fun findByUserUserId(userId: Long): List<Library>
 }

@@ -2,6 +2,7 @@ package com.jluqgon214.Videogames.Library.model
 
 import jakarta.persistence.*
 
+@Suppress("JpaObjectClassSignatureInspection")
 @Entity
 @Table(name = "Libraries")
 data class Library(
@@ -16,8 +17,18 @@ data class Library(
     @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false, foreignKey = ForeignKey(name = "fk_libraries_user"))
     val user: User,
 
-    // Relación muchos a uno con la tabla de videojuegos
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "videogameId", referencedColumnName = "videogameId", nullable = false, foreignKey = ForeignKey(name = "fk_libraries_videogame"))
-    val videogame: Videogame
+
+    @ManyToMany
+    @JoinTable(
+        name = "Library_Videogame",
+        joinColumns = [JoinColumn(name = "library_id")],
+        inverseJoinColumns = [JoinColumn(name = "videogameId")]
+    )
+    val videogames: MutableList<Videogame>? = mutableListOf()
+)
+
+data class LibraryRequest(
+    val type: String,
+    val userId: Long,
+    val videogameIds: List<Long>
 )

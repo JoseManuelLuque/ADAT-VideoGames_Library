@@ -5,8 +5,10 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.Table
-import java.net.URL
+import jakarta.persistence.ManyToOne
 import java.util.Date
 
 @Suppress("JpaObjectClassSignatureInspection")
@@ -25,8 +27,13 @@ data class Videogame(
     @Column(nullable = false)
     var genre: String? = null,
 
-    @Column(nullable = false)
+    @Column
     var release_date: Date? = null,
 
+    @Column
     var developer: String? = null
+)
+
+data class VideogameIdsRequest(
+    val videogameIds: List<Long>
 )

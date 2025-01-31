@@ -82,12 +82,4 @@ class UserController {
         val users = userService.getAllUsers()
         return ResponseEntity.ok(users)
     }
-
-    @GetMapping("/myID")
-    fun getMyID(
-        @RequestBody username: String
-    ): ResponseEntity<Any> {
-        val id = userService.getIdUser(username)
-        return ResponseEntity.ok(mapOf("id" to id.toString()))
-    }
 }

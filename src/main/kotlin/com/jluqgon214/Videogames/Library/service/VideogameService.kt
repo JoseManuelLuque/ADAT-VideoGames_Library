@@ -25,8 +25,7 @@ class VideogameService() {
     @Transactional
     fun create(videogame: Videogame): Videogame {
         if (videogameRepository.existsByTitle(videogame.title!!)) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("mensaje" to "La contrasña no es correcta"))
-            // Lanzar excepción si ya existe un juego con el mismo título
+            throw Exception("Ya existe un juego con este título") // Lanzar excepción si ya existe un juego con el mismo título
         }
         return videogameRepository.save(videogame)
     }

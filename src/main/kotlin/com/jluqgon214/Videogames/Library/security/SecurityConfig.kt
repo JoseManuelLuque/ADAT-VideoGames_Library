@@ -45,8 +45,26 @@ class SecurityConfig {
                     // Para logearte o registrarte no necesitas estar autentificado, ya que si no jamas podrias logearte o registrarte
                     .requestMatchers("/users/login", "/users/register").permitAll()
 
-                    // Usuarios
+                    /*Usuarios*/
+
+                    // Para mirar los usuarios guardados en la base de datos debes ser admin
                     .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
+
+                    /*Librerias*/
+
+                    // Para mirar las librerias globales debes ser admin
+                    .requestMatchers(HttpMethod.GET, "/libraries").hasAuthority("ADMIN")
+                    // Para mirar las librerias de un usuario debes estar autentificado
+                    .requestMatchers(HttpMethod.GET, "/libraries/user/*").authenticated()
+                    // Para crear o borrar una libreria debes estar autentificado
+                    .requestMatchers(HttpMethod.POST, "/libraries").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/libraries/*").authenticated()
+
+                    // Para añadir o eliminar un videojuego de una libreria debes estar autentificado
+                    .requestMatchers(HttpMethod.DELETE, "/libraries/*/delete").authenticated()
+                    .requestMatchers(HttpMethod.POST, "/libraries/*/add").authenticated()
+
+                    /*Videojuegos*/
 
                     // Para mirar los videojuegos debes solo estar logeado da igual tu rol
                     .requestMatchers(HttpMethod.GET, "/videogames", "/videogames/*").authenticated()
@@ -54,6 +72,8 @@ class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/videogames").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/videogames/*").hasAuthority("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/videogames/*").hasAuthority("ADMIN")
+
+
                     // Para el resto de consultas debes estar autentificado(ADMIN o USER)
                     .anyRequest().authenticated()
             }
