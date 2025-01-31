@@ -74,7 +74,7 @@ La tabla Library\_Videogame es una tabla de unión que establece una relación d
 
 <figure><img src=".gitbook/assets/Untitled.png" alt=""><figcaption></figcaption></figure>
 
-
+***
 
 ## Endpoints
 
@@ -129,3 +129,78 @@ La tabla Library\_Videogame es una tabla de unión que establece una relación d
 
 ***
 
+## Lógica de Negocio
+
+### Usuarios
+
+#### Registro:
+
+* Verificar que la contraseña cumpla con los requisitos mínimos (Min 6 carácteres).
+* Validar que los datos de entrada (nombre de usuario y contraseña)
+* Validar que el nombre de usuario sea único
+* Guardar el nuevo usuario en la base de datos.
+
+#### Inicio de sesión:
+
+* Validar las credenciales del usuario (nombre de usuario y contraseña).
+* Generar un token de autenticación si las credenciales son válidas.
+
+#### Gestión de usuarios:
+
+* Lista de todos los usuarios (Solo accesible para administradores)
+
+#### Roles y permisos:
+
+* Definir roles de usuario (ADMIN o USER).&#x20;
+
+#### Validaciones:
+
+* Validar los datos de entrada para el registro y la autenticación.&#x20;
+* Asegurarse de que los campos obligatorios no estén vacíos y cumplan con los requisitos.&#x20;
+
+
+
+### Videojuegos
+
+#### Registro de videojuegos:
+
+* Validar que los datos de entrada (nombre del videojuego, género, etc.) no estén vacíos.&#x20;
+* Validar que el nombre del juego sea único.
+* Guardar el nuevo videojuego en la base de datos.&#x20;
+
+#### Gestión de videojuegos (Solo disponibles para Administradores):
+
+* Obtener una lista de todos los videojuegos.&#x20;
+* Actualizar la información de un videojuego existente aportando su ID para buscarlo primero.&#x20;
+* Eliminar un videojuego de la base de datos por su ID.&#x20;
+
+#### Validaciones:
+
+* Validar los datos de entrada para el registro y la actualización de videojuegos.&#x20;
+* Asegurarse de que los campos obligatorios no estén vacíos y cumplan con los requisitos.
+
+
+
+### Librerías
+
+#### Registro de bibliotecas:
+
+* Validar que los datos de entrada (nombre de la biblioteca, tipo, etc.) no estén vacíos.&#x20;
+* Guardar la nueva biblioteca en la base de datos.&#x20;
+
+#### Gestión de bibliotecas:
+
+* Obtener una lista de todas las bibliotecas (Solo Administradores).&#x20;
+* Obtener bibliotecas por userId y type.&#x20;
+* Obtener bibliotecas por userId.&#x20;
+* Eliminar una biblioteca de la base de datos.&#x20;
+
+#### Gestión de videojuegos en bibliotecas:
+
+* Añadir videojuegos a una biblioteca.&#x20;
+* Eliminar videojuegos de una biblioteca.&#x20;
+
+#### Validaciones:
+
+* Validar los datos de entrada para el registro y la actualización de bibliotecas.&#x20;
+* Asegurarse de que los campos obligatorios no estén vacíos y cumplan con los requisitos.
