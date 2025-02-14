@@ -30,6 +30,10 @@ La tabla Users almacena información sobre los usuarios de la aplicación. Cada 
 
 **password**: La contraseña del usuario, que es obligatoria.
 
+**register\_date**: Fecha de registro se añade sola a la hora de hacer el registro.
+
+**rol**: Rol de usuario, "ADMIN" o "USER".
+
 
 
 #### Videogames
