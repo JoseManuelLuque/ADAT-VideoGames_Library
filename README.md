@@ -47,6 +47,12 @@ La tabla Videogames almacena información sobre los videojuegos. Cada videojuego
 
 **genre**: El género del videojuego, que es obligatorio.
 
+**plattform**: Plataforma de juego.
+
+**release\_date**: Fecha de salida del videojuego.
+
+**developer**: Desarrollador del videojuego.
+
 
 
 #### Libraries
